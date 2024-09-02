@@ -131,8 +131,25 @@ def lab_to_rgb(L, ab):
         rgb_imgs.append(img_rgb)
     return np.stack(rgb_imgs, axis=0)
 
-# Memuat model dan mengatur ke mode evaluasi
-model_path = 'path_to_trained_model150.pth'
+import gdown
+import os
+import torch
+import torch.nn as nn
+
+# Fungsi unduhan file model
+def download_model_if_not_exists(model_path, file_id):
+    if not os.path.exists(model_path):
+        download_url = f'https://drive.google.com/uc?id={file_id}'
+        gdown.download(download_url, model_path, quiet=False)
+
+# Tentukan path untuk menyimpan model
+model_path = 'model.pth'
+file_id = '1PMQVxvDTmLqP1DhX8xmP3K_iw_RCJsQN'
+
+# Unduh model jika belum ada
+download_model_if_not_exists(model_path, file_id)
+
+# Load model dan mengatur ke mode evaluasi
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 net_G = Generator().to(device)
 net_G.load_state_dict(torch.load(model_path, map_location=device))
